@@ -14,6 +14,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
+            android:name="jp.tohoh.DTCollection.PrefActivity"></activity>
+        <activity
             android:name="jp.tohoh.DTCollection.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape" 

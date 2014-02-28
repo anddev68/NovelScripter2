@@ -102,7 +102,7 @@ public class Display implements TextPharse.CallBack{
 		//	テキスト解析クラスを初期化します
 		try {
 			//	エラー無しの場合
-			mPharse = new TextPharse(getStream("sample2.sn"),this);
+			mPharse = new TextPharse(getStream("sample3.sn"),this);
 		} catch (IOException e) {
 			//	エラーありの場合
 			mPharse = new TextPharse();

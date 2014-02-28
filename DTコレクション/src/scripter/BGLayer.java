@@ -43,8 +43,6 @@ public class BGLayer extends Layer{
 		super.draw(c);
 		
 		if(isBOut()){		//	ブラックアウト中の処理
-			int a = (int)((BLACKOUT_MAX_COUNT-blackout_count)*255/BLACKOUT_MAX_COUNT);
-			Paint p = new Paint();
 			c.drawColor(Color.BLACK);
 			
 		}else{				//	通常描画

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*****************************************************
  * テキスト解析クラス
@@ -41,6 +43,8 @@ public class TextPharse {
 	ArrayList<String> mLine;	//データ
 	CallBack mCallBack;	//	コールバック
 
+	Variable mVal;			//	変数
+	
 	int iLogPtr;	//ログの位置	
 	
 	/*************************************************************
@@ -54,6 +58,8 @@ public class TextPharse {
 
 		mLine.add("テキストデータがありません");
 		mLine.add("エラーを確認しました");
+		
+		mVal = new Variable();
 	}		
 	
 	/*************************************************************
@@ -68,7 +74,9 @@ public class TextPharse {
 		iLineNum = 0;
 		mLine = new ArrayList<String>();
 		mCallBack = cb;
+		mVal = new Variable();
 		changeFile(is);
+		
 	}
 	
 	/*****************************************************************
@@ -112,10 +120,8 @@ public class TextPharse {
 	 ******************************************/
 	public void nextNS(){
 		boolean loop = true;
-		StringBuilder sb = new StringBuilder();
 		ArrayList<String> strs = null;	//	コマンド解析用
-		ArrayList<String> queue = null;	//	テキストレイヤーに渡す用
-		
+	
 		while(loop){
 			if(isEmptyLow()) iLineNum++;	//	空行無視
 			else if(isComment()) iLineNum++;		//	コメント文無視
@@ -129,12 +135,16 @@ public class TextPharse {
 					mCallBack.showOption(strs);				//	処理待ち
 					return;
 				}else if(strs.get(0).equals("goto")){
-					jumpLabel(strs.get(1));
+					jumpLabel(strs.get(1));				//	指定のラベルに飛ぶ
+				}else if(strs.get(0).equals("mov")){	//	変数を代入する場合
+					setValue(strs);						//	変数のセット
+				}else if(strs.get(0).equals("add")){	//	変数に値を追加する
+					addValue(strs);
 				}
 				iLineNum++;
 			}else{		//	本文の処理
 				//	改行待ち機能は今のところ実装していません
-				mCallBack.changeText(mLine.get(iLineNum));
+				mCallBack.changeText(replaceVariable(mLine.get(iLineNum)));	//	変数は値を代入して読み込む
 				iLineNum++;
 				
 				loop = false;
@@ -154,10 +164,13 @@ public class TextPharse {
 	/***********************************************************
 	 * 指定のラベルに飛びます。選択肢が選ばれた時に使用します。
 	 * 現在の行から後ろに検索します。前には検索しません。
+	 * （2/27訂正）
+	 * 前から検索します。不都合の場合は訂正してください。
 	 * 存在しない場合には警告するだけで何も行いません。
 	 **********************************************************/
 	public void jumpLabel(String labelName){
-		for(int i=iLineNum; i<mLine.size(); i++){
+		int start = 0;	//	iLineNumに変更すれば現在の番号から開始します
+		for(int i=start; i<mLine.size(); i++){
 			if(mLine.get(i).equals(labelName)){
 				iLineNum = i;
 				return;
@@ -211,7 +224,7 @@ public class TextPharse {
 	}
 	
 	/***********************************************************************
-	 * 背景を設定する
+	 * コマンド解析の結果、背景を設定する
 	 **********************************************************************/
 	private void setBackGround(ArrayList<String> strs){
 		switch( Integer.parseInt(strs.get(2)) ){
@@ -222,7 +235,55 @@ public class TextPharse {
 		}
 	}
 
+	/***********************************************************************
+	 * コマンド解析の結果、変数の代入を行います。
+	 * 文字列かどうかは自動判定にしてあります。
+	 * 将来的にはダブルクオートに対応したいと思います。
+	 **********************************************************************/
+	private void setValue(ArrayList<String> strs){
+		if(strs.get(1).charAt(0)=='%'){
+			int num = Integer.parseInt(strs.get(2));
+			mVal.setValue(strs.get(1),  num);
+		
+		}else
+			mVal.setValue(strs.get(1), strs.get(2) );	
+	}
 	
+	/**********************************************************************
+	 * コマンド解析の結果、変数に値を足します。
+	 **********************************************************************/
+	private void addValue(ArrayList<String> strs){
+		if(strs.get(1).charAt(0)=='%')
+			mVal.addValue(strs.get(1), Integer.parseInt(strs.get(2)) );
+		else
+			mVal.addValue(strs.get(1), strs.get(2) );	
+	}
+	
+	
+	/**********************************************************************
+	 * 文章解析を行い、変数を置き換えたものを返します。
+	 * 今のところは%xxx、整数のみ対応しています。
+	 **********************************************************************/
+	private String replaceVariable(String str){
+		//	作業用バッファを用意する
+		String buffer = new String(str);
+		
+		//	正規表現で整数変数を示す%xxx部分を抜き出します。
+		String regex = "%\\d+";
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(str);
+		
+		//	%xxxが抜き出せたら、それぞれに値を代入していきます。
+		while( m.find() ){
+			//	マッチした文字列（例：%0）を取得
+			String xxx = m.group();
+			//	値を取り出す
+			String s = mVal.getValue(xxx);
+			//	置き換える
+			buffer = buffer.replaceFirst(xxx, s);
+		}
+		return buffer;
+	}
 	
 	
 	

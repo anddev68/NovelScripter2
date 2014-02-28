@@ -147,6 +147,7 @@ public class Display implements TextPharse.CallBack{
 		if(bScreenUpdate||bWait){
 			bScreenUpdate = false;
 			c.drawColor(Color.WHITE);
+			
 			if(mLayer[1].display > 0)
 				mLayer[1].draw(c);
 			if(mLayer[0].display > 0)

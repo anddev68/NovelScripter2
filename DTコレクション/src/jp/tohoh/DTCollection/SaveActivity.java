@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 
 /*************************************
  * セーブ画面のアクティビティー
@@ -27,5 +28,15 @@ public class SaveActivity extends Activity{
 		//	getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	/* セーブボタンが押されたとき */
+	public void onSaveButton(View v){
+		//	とりあえず0番が押されたことにしておく
+		setResult(0);
+	    finish();
+	
+	}
+	
+	
 
 }

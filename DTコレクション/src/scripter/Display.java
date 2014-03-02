@@ -30,7 +30,8 @@ import android.graphics.Color;
  * まだバグも多いので自己責任でおねがいします。
  * 著作権は@anddev68にあります。個人利用は連絡なしでも構いませんが、商用利用の場合はご連絡ください。
  *
- *【仕様・バグ】
+
+ *
  * 2014/2/24
  * レイヤーの要素番号に依存しないよう、各レイヤーを取得するメソッドを作成しました。
  * 今後はそれをご使用ください。
@@ -72,6 +73,8 @@ public class Display implements TextPharse.CallBack{
 	
 	//	画面全消し更新フラグ（レスポンス向上用）
 	boolean bScreenUpdate;
+	
+	
 	
 
 	/*******************************
@@ -249,6 +252,9 @@ public class Display implements TextPharse.CallBack{
 	 * 
 	 * clickOptionLayer: 選択肢を選んだ場合
 	 * 
+	 * getData:現在の変数・行番号等を取得します
+	 * セーブなどに使用します
+	 * 
 	 *******************************************************************/
 	public void disableTextLayer(){
 		DisableLayer(0);
@@ -298,6 +304,14 @@ public class Display implements TextPharse.CallBack{
 	
 	public void clickOptionLayer(int x,int y){
 		if(getOptionLayer().display > 0) getOptionLayer().onClick(x, y);
+	}
+	
+	/* 現在の記録すべきデータを取得します */
+	public RecordData getData(){
+		RecordData data = new RecordData();
+		data.iLineNum = mPharse.iLineNum;
+		
+		return data;
 	}
 	
 	

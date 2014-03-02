@@ -3,6 +3,7 @@ package jp.tohoh.DTCollection;
 
 
 
+import scripter.RecordData;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -40,6 +41,9 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 		display = new scripter.Display(context);
 		
 		gesture = new GestureDetector(context, this);
+		
+		
+		
 	}
 
 	@Override
@@ -60,12 +64,16 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 			surfaceHolder.unlockCanvasAndPost(canvas);
 			
 			//	ここでその他の処理
-			
-
-          	
-          	
             
 		}
+	}
+	
+	/***********************************
+	 * 読み書きするデータを取得します
+	 * @return 
+	 **********************************/
+	public RecordData getData(){
+		return display.getData();
 	}
 
 	@Override
@@ -187,7 +195,11 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 		display.nextText();
 		System.out.println("SingleTap");
 		return false;
+	
+	
 	}
+	
+	
 
 
 

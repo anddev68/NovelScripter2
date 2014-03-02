@@ -1,0 +1,36 @@
+実装計画表
+
+
+LoadActivity→MainActivity→Display.loadData;
+・ボタンが押される
+・ファイル名・番号の取得
+・resultとしてMainActivityに返す
+・その値をもとにRecorderで解析を行い、displayに渡す
+
+
+SaveActivity#onSaveButton→MainActivity#onResultActivity→Recorder#write→ 
+                                        →display#getData→↑
+
+・セーブボタンが押される
+・ファイル名・番号の決定
+・resultとしてMainActivityに返す
+・その値をもとにRecorderに渡し、保存する
+
+
+
+MainActivity
+ - MainView
+  -Display
+   -TextPharse
+    -Variable
+   -BackLogLayer
+   -BGLayer
+   -OptionLayer
+   -
+   
+   
+ Recorder
+ Config
+  
+ 
+

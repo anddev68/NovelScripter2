@@ -67,6 +67,9 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 		}
 	}
 	
+	public void update(){
+		display.update();
+	}
 
 
 	@Override

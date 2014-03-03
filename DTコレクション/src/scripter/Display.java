@@ -280,8 +280,7 @@ public class Display implements TextPharse.CallBack,TextLayer.CallBack{
 	 * 
 	 * clickOptionLayer: 選択肢を選んだ場合
 	 * 
-	 * getData:現在の変数・行番号等を取得します
-	 * セーブなどに使用します
+	 * update: 強制的に画面の更新を行います（Activityのrestart時等に試用してください）
 	 * 
 	 *******************************************************************/
 	public void disableTextLayer(){
@@ -345,6 +344,10 @@ public class Display implements TextPharse.CallBack,TextLayer.CallBack{
 		bScreenUpdate = true;
 	}
 	
+	public void update(){
+		bWait = false;
+		bScreenUpdate = true;
+	}
 	
 	/****************************************************************
 	 * TextPharseから受け取ったコールバックメソッドの実装

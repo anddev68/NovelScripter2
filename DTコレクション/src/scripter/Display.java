@@ -74,7 +74,11 @@ public class Display implements TextPharse.CallBack{
 	//	画面全消し更新フラグ（レスポンス向上用）
 	boolean bScreenUpdate;
 	
-	
+	//	自動再生（オートモード）かどうか
+	boolean bAutoMode;
+
+	//	スキップモードかどうか
+	boolean bSkipMode;
 	
 
 	/*******************************
@@ -150,15 +154,25 @@ public class Display implements TextPharse.CallBack{
 		if(bScreenUpdate||bWait){
 			bScreenUpdate = false;
 			c.drawColor(Color.WHITE);
-			
-			if(mLayer[1].display > 0)
-				mLayer[1].draw(c);
-			if(mLayer[0].display > 0)
-				mLayer[0].draw(c);
-			if(mLayer[2].display > 0)
-				mLayer[2].draw(c);
-			if(getOptionLayer().display > 0){
-				getOptionLayer().draw(c);
+			bScreenUpdate = false;
+			c.drawColor(Color.WHITE);
+
+			//	背景表示
+			if(getBGLayer().display > 0) getBGLayer().draw(c);
+
+			//	人物レイヤ表示
+			if(getPersonLayer().display > 0) getPersonLayer().draw(c);
+			//	テキストレイヤ表示
+			if(getTextLayer().display > 0) getTextLayer().draw(c);
+			//	選択肢レイヤ表示
+			if(getOptionLayer().display > 0) getOptionLayer().draw(c);
+
+			//	バックログレイヤ表示
+			if(getBackLogLayer().display > 0) getBackLogLayer().draw(c);
+
+			//	上に小さくオートモード表示
+			if(bAutoMode){
+				c.drawText("AUTO", 50, 50, Config.whiteFont());
 			}
 			
 		}else{
@@ -234,6 +248,14 @@ public class Display implements TextPharse.CallBack{
 		return null;
 	}
 	
+	private PersonLayer getPersonLayer(){
+		for(int i=0;i<mLayer.length;i++){
+			if(mLayer[i].getClass() == PersonLayer.class)
+				return (PersonLayer) mLayer[i];
+		}
+		return null;
+	}
+	
 	
 	/******************************************************************
 	 * 各種ユーザー入力に対する処理
@@ -304,6 +326,17 @@ public class Display implements TextPharse.CallBack{
 	
 	public void clickOptionLayer(int x,int y){
 		if(getOptionLayer().display > 0) getOptionLayer().onClick(x, y);
+	}
+	
+
+	public void enableAutoMode(){
+		bAutoMode = true;
+		bScreenUpdate = true;
+	}
+
+	public void disableAutoMode(){
+		bAutoMode = false;
+		bScreenUpdate = true;
 	}
 	
 	/* 現在の記録すべきデータを取得します */
@@ -390,6 +423,16 @@ public class Display implements TextPharse.CallBack{
 		
 		
 		
+	}
+	
+	/*******************************************
+	 * テキストレイヤーが1行表示しきった時の処理
+	 * @see TextLayer
+	 ******************************************/
+	@Override
+	public void onFinish() {
+		//	オートモードなら勝手にすすめる
+		if(bAutoMode) nextText();
 	}
 
 

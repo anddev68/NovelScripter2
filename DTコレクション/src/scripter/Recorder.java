@@ -29,31 +29,36 @@ public class Recorder {
 	 *************************************************/
 	public static RecordData read(InputStream stream){
 		try {
-			
-			
+			RecordData data = new RecordData();
 			BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+			
 			//	1行目は行番号
-			br.readLine();
+			data.iLineNum = Integer.parseInt(br.readLine());
 			
 			//	それ以降は変数の内容
 			String line = "";
-			int i=0;
-			while((line=br.readLine())!=null){
-				if(i<200){	//	数値変数の値を保存
-					int x =Integer.parseInt(line);
-					var.setValue("%"+i, x);
-				}else{		//	テキスト変数
-					var.setValue("$"+i, line);
-				
-				}
-				i++;
+
+			
+			//	ローカル値データを取得
+			for(int i=0; i<200; i++){
+				line = br.readLine();
+				int x =Integer.parseInt(line);
+				data.mVar.mValInt[i] = x;
+			}
+			
+			//	ローカル文字データを取得
+			for(int i=0; i<200; i++){
+				line = br.readLine();
+				data.mVar.mValStr[i] = line;
 			}
 			
 			
 			br.close();
+			return data;
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
+			return null;
 		}
 	}
 	
@@ -89,7 +94,6 @@ public class Recorder {
 		}
 		
 	}
-	
 	
 	
 	/***************************************************

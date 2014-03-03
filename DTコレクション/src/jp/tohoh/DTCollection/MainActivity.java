@@ -38,11 +38,11 @@ public class MainActivity extends Activity {
 			startActivity(intent);
 			break;
 		case R.id.item1:
-			intent = new Intent(this,PrefActivity.class);
+			intent = new Intent(this,SaveActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.item2:
-			intent = new Intent(this,PrefActivity.class);
+			intent = new Intent(this,LoadActivity.class);
 			startActivity(intent);
 			break;
 		}

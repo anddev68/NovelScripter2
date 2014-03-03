@@ -105,10 +105,10 @@ public class Variable {
 		mValInt[index]-=value;
 	}
 	
-	/***************************************
+	/******************************************************
 	 * 値をセットします
 	 * @param name 変数名 $xxx
-	 ***************************************/
+	 ******************************************************/
 	public static void setValue(String name,String value){
 		int index = Integer.parseInt(name.substring(1));
 		mValStr[index] = value;
@@ -122,14 +122,16 @@ public class Variable {
 	 *****************************************************/
 	public static void setData(InputStream stream){
 		try {
+			String line = "";
 			if(stream==null) return;
 			BufferedReader br = new BufferedReader(new InputStreamReader(stream));
 			
 			//	1行目は行番号
-			iLineNum = Integer.parseInt(br.readLine());
+			line = br.readLine();
+			iLineNum = Integer.parseInt(line);
 			
 			//	それ以降は変数の内容
-			String line = "";
+		
 
 			
 			//	ローカル値データを取得
@@ -154,29 +156,30 @@ public class Variable {
 		
 	}
 	
-	/**
+	/*******************************************************
 	 * ストリームに現在の内容を書き出します。
 	 * @param stream
-	 */
+	 ******************************************************/
 	public static void writeData(OutputStream stream){
 		try {
 			if(stream==null) return;
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(stream));
 			
 			//	1行目は行番号
-			bw.write(iLineNum);
+			bw.write(""+iLineNum);
 			bw.newLine();
 			
 			//	それ以降は変数の内容
 			
 			//	ローカル値データを取得
 			for(int i=0; i<200; i++){
-				bw.write(mValInt[i]);
+				bw.write(""+mValInt[i]);
 				bw.newLine();
 			}
 			
 			//	ローカル文字データを取得
 			for(int i=0; i<200; i++){
+				if(mValStr[i]==null) mValStr[i]="";
 				bw.write(mValStr[i]);
 				bw.newLine();
 			}

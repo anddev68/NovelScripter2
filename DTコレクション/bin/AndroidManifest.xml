@@ -16,6 +16,12 @@
         <activity
             android:name="jp.tohoh.DTCollection.PrefActivity"
 			 android:screenOrientation="landscape" />
+                <activity
+            android:name="jp.tohoh.DTCollection.SaveActivity"
+			 android:screenOrientation="landscape" />
+                        <activity
+            android:name="jp.tohoh.DTCollection.LoadActivity"
+			 android:screenOrientation="landscape" />
            
         <activity
             android:name="jp.tohoh.DTCollection.MainActivity"

@@ -21,7 +21,7 @@ import android.widget.ListView;
  *
  * @see activity_save
  *************************************/
-public class LoadActivity extends Activity implements View.OnClickListener,OnItemClickListener{
+public class LoadActivity extends Activity implements OnItemClickListener{
 	
 	ListView list;
 	
@@ -31,7 +31,6 @@ public class LoadActivity extends Activity implements View.OnClickListener,OnIte
 		setContentView(R.layout.activity_save);
 		
 		list = (ListView) findViewById(R.id.ListView1);
-		list.setOnClickListener(this);
 		list.setOnItemClickListener(this);
 		list.setAdapter(getAdapter());
 	}
@@ -51,11 +50,7 @@ public class LoadActivity extends Activity implements View.OnClickListener,OnIte
 		return adapter;
 	}
 
-	@Override
-	public void onClick(View v) {
-		// TODO 自動生成されたメソッド・スタブ
-		
-	}
+
 	
 	
 	/*************************************************************************
@@ -80,6 +75,7 @@ public class LoadActivity extends Activity implements View.OnClickListener,OnIte
 			}).show();
 			
 		}
+		finish();
 	}
 	
 }

@@ -18,7 +18,7 @@ import android.widget.ListView;
  *
  * @see activity_save
  *************************************/
-public class SaveActivity extends Activity implements View.OnClickListener,OnItemClickListener{
+public class SaveActivity extends Activity implements OnItemClickListener{
 	
 	ListView list;
 	
@@ -28,7 +28,6 @@ public class SaveActivity extends Activity implements View.OnClickListener,OnIte
 		setContentView(R.layout.activity_save);
 		
 		list = (ListView) findViewById(R.id.ListView1);
-		list.setOnClickListener(this);
 		list.setOnItemClickListener(this);
 		list.setAdapter(getAdapter());
 	}
@@ -49,11 +48,7 @@ public class SaveActivity extends Activity implements View.OnClickListener,OnIte
 		return adapter;
 	}
 
-	@Override
-	public void onClick(View v) {
-		// TODO 自動生成されたメソッド・スタブ
-		
-	}
+
 	
 	
 	/*************************************************************************
@@ -65,6 +60,7 @@ public class SaveActivity extends Activity implements View.OnClickListener,OnIte
 	public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long id) {
 		try {
 			Variable.writeData(this.openFileOutput(pos+".txt",MODE_PRIVATE));
+			finish();
 		} catch (FileNotFoundException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();

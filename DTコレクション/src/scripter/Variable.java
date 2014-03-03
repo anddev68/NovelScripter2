@@ -1,9 +1,12 @@
 package scripter;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 
 /***************************************************
@@ -115,9 +118,11 @@ public class Variable {
 	/*******************************************************
 	 * 指定されたストリームから行番号と変数をセットします
 	 * 
+	 * ファイルがない場合は何も行いません。
 	 *****************************************************/
-	public void setData(InputStream stream){
+	public static void setData(InputStream stream){
 		try {
+			if(stream==null) return;
 			BufferedReader br = new BufferedReader(new InputStreamReader(stream));
 			
 			//	1行目は行番号
@@ -147,12 +152,44 @@ public class Variable {
 			e.printStackTrace();
 		}
 		
-		
+	}
+	
+	/**
+	 * ストリームに現在の内容を書き出します。
+	 * @param stream
+	 */
+	public static void writeData(OutputStream stream){
+		try {
+			if(stream==null) return;
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(stream));
+			
+			//	1行目は行番号
+			bw.write(iLineNum);
+			bw.newLine();
+			
+			//	それ以降は変数の内容
+			
+			//	ローカル値データを取得
+			for(int i=0; i<200; i++){
+				bw.write(mValInt[i]);
+				bw.newLine();
+			}
+			
+			//	ローカル文字データを取得
+			for(int i=0; i<200; i++){
+				bw.write(mValStr[i]);
+				bw.newLine();
+			}
+			
+			
+			bw.close();
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
 		
 		
 	}
-	
-
 	
 	
 	

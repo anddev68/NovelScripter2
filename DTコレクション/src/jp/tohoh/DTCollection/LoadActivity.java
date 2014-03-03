@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 
 import scripter.Variable;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -18,7 +21,7 @@ import android.widget.ListView;
  *
  * @see activity_save
  *************************************/
-public class SaveActivity extends Activity implements View.OnClickListener,OnItemClickListener{
+public class LoadActivity extends Activity implements View.OnClickListener,OnItemClickListener{
 	
 	ListView list;
 	
@@ -39,7 +42,6 @@ public class SaveActivity extends Activity implements View.OnClickListener,OnIte
 		return true;
 	}
 	
-
 	
 	/* データを取得します */
 	public ListAdapter getAdapter(){
@@ -64,13 +66,20 @@ public class SaveActivity extends Activity implements View.OnClickListener,OnIte
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long id) {
 		try {
-			Variable.writeData(this.openFileOutput(pos+".txt",MODE_PRIVATE));
+			Variable.setData(this.openFileInput(pos+".txt"));
 		} catch (FileNotFoundException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+			new AlertDialog.Builder(this)
+			.setTitle("データの読み込みに失敗しました")
+			.setPositiveButton("OK", new OnClickListener(){
+
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					finish();
+				}
+				
+			}).show();
+			
 		}
 	}
 	
-	
-
 }

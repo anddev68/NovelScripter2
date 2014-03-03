@@ -31,15 +31,19 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		Intent intent;
 		switch(item.getItemId()){
 		case R.id.action_settings:
-			Intent intent = new Intent(this,PrefActivity.class);
+			intent = new Intent(this,PrefActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.item1:
-			
+			intent = new Intent(this,PrefActivity.class);
+			startActivity(intent);
 			break;
 		case R.id.item2:
+			intent = new Intent(this,PrefActivity.class);
+			startActivity(intent);
 			break;
 		}
 		

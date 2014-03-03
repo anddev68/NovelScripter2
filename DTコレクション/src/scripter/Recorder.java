@@ -23,44 +23,7 @@ import java.io.OutputStreamWriter;
 public class Recorder {
 	
 
-	/*************************************************
-	 * 指定されたストリーム（セーブデータ.data）を解析し、
-	 * 現在の変数、行番号などをセットし、返します。
-	 *************************************************/
-	public static RecordData read(InputStream stream){
-		try {
-			RecordData data = new RecordData();
-			BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-			
-			//	1行目は行番号
-			data.iLineNum = Integer.parseInt(br.readLine());
-			
-			//	それ以降は変数の内容
-			String line = "";
 
-			
-			//	ローカル値データを取得
-			for(int i=0; i<200; i++){
-				line = br.readLine();
-				int x =Integer.parseInt(line);
-				data.mVar.mValInt[i] = x;
-			}
-			
-			//	ローカル文字データを取得
-			for(int i=0; i<200; i++){
-				line = br.readLine();
-				data.mVar.mValStr[i] = line;
-			}
-			
-			
-			br.close();
-			return data;
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-			return null;
-		}
-	}
 	
 	/************************************************
 	 * 指定されたストリームに対して指定のフォーマットで
@@ -98,7 +61,10 @@ public class Recorder {
 	
 	/***************************************************
 	 * セーブデータ/ロードデータ一覧画面に表示するデータ
-	 ***************************************************/
+	 * 
+	 * ListView用にAdapterで吐き出します
+	 *****************************************************/
+	public static Adapter 
 	
 	
 	

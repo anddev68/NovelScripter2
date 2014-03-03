@@ -1,5 +1,10 @@
 package scripter;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 
 /***************************************************
  * NScripter互換のグローバル変数・内部変数を扱うクラスです
@@ -8,6 +13,15 @@ package scripter;
  * 変数にはグローバル領域・ローカルがあります。
  * $0が文字変数、%0が数値変数です。
  * それぞれ200以降はグローバルとなります。
+ * 
+ * このクラスは1個以上プログラムに存在することができないため、
+ * 静的参照が行えます。
+ * 
+ * ファイルを使ってセーブロードする際は、RecordDataのインスタンスを渡してください。
+ * 
+ * 
+ *  
+ *  
  * 
  * 【グローバル変数】
  * ・セーブしようがロードしようが変わらない
@@ -28,7 +42,6 @@ package scripter;
  * ・addValue()：指定した変数名に足します。文字でも数値でも使えます。
  * ・subValue()：指定した変数名を引きます。
  * 
- * @see TextPharse
  * 
  ****************************************************/
 public class Variable {
@@ -36,8 +49,8 @@ public class Variable {
 	//	メモリの状況で変更してください。
 	public static final int GLOBAL_MAX = 400;
 	
-	int[] mValInt;
-	String[] mValStr;
+	public static int[] mValInt = new int[GLOBAL_MAX];;
+	public static String[] mValStr = new String[GLOBAL_MAX];;
 	
 	public Variable(){
 		mValInt = new int[GLOBAL_MAX];
@@ -52,7 +65,7 @@ public class Variable {
 	 * @return Stringに変換した変数の中身（int,string)
 	 * @return 取得できない場合は"0"もしくは""
 	 ***********************************/
-	public String getValue(String name){
+	public static String getValue(String name){
 		String str = "";
 		int index;
 		try{
@@ -74,20 +87,20 @@ public class Variable {
 	 * @param name 変数名 %xxx
 	 * @param int 値
 	 **************************************/
-	public void setValue(String name,int value){
+	public static void setValue(String name,int value){
 		int index = Integer.parseInt(name.substring(1));
 		mValInt[index] = value;
 	}
 	
-	public void addValue(String name,String value){
+	public static void addValue(String name,String value){
 		int index = Integer.parseInt(name.substring(1));
 		mValStr[index]+=value;
 	}
-	public void addValue(String name,int value){
+	public static void addValue(String name,int value){
 		int index = Integer.parseInt(name.substring(1));
 		mValInt[index]+=value;
 	}
-	public void subValue(String name,int value){
+	public static void subValue(String name,int value){
 		int index = Integer.parseInt(name.substring(1));
 		mValInt[index]-=value;
 	}
@@ -96,40 +109,59 @@ public class Variable {
 	 * 値をセットします
 	 * @param name 変数名 $xxx
 	 ***************************************/
-	public void setValue(String name,String value){
+	public static void setValue(String name,String value){
 		int index = Integer.parseInt(name.substring(1));
 		mValStr[index] = value;
 	}
 	
 	
-	/************************************
-	 * グローバル変数を書き出します。
-	 *************************************/
-	public void writeGrobalValue(){
-		
+	/*************************************************
+	 * 指定されたストリーム（セーブデータ.data）を解析し、
+	 * 現在の変数、行番号などをセットし、返します。
+	 *************************************************/
+	public static RecordData read(InputStream stream){
+		try {
+			RecordData data = new RecordData();
+			BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+			
+			//	1行目は行番号
+			data.iLineNum = Integer.parseInt(br.readLine());
+			
+			//	それ以降は変数の内容
+			String line = "";
+
+			
+			//	ローカル値データを取得
+			for(int i=0; i<200; i++){
+				line = br.readLine();
+				int x =Integer.parseInt(line);
+				data.mVar.mValInt[i] = x;
+			}
+			
+			//	ローカル文字データを取得
+			for(int i=0; i<200; i++){
+				line = br.readLine();
+				data.mVar.mValStr[i] = line;
+			}
+			
+			
+			br.close();
+			return data;
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+			return null;
+		}
 	}
-	
-	public void loadGrobalValue(){
-		
-	}
-	
-	/***************************************
-	 * ローカル変数を書き出します。
-	 ***************************************/
-	public void writeLocalValue(){
-		
-	}
-	
-	public void loadLocalValue(){
-		
-	}
+
 	
 	
 	
-	public void release(){
-		
-		
-		
+	
+	
+	public static void release(){
+		mValInt = null;
+		mValStr = null;
 	}
 	
 	

@@ -17,6 +17,8 @@ SaveActivity#onSaveButton→MainActivity#onResultActivity→Recorder#write→
 ・その値をもとにRecorderに渡し、保存する
 
 
+SaveActivity#setData→Recorder#getData()→
+
 
 MainActivity
  - MainView

@@ -9,6 +9,7 @@ import android.view.View;
 /*************************************
  * セーブ画面のアクティビティー
  *
+ * @see activity_save
  *************************************/
 public class SaveActivity extends Activity{
 	

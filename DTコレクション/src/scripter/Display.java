@@ -54,7 +54,8 @@ import android.graphics.Color;
  *
  *
  */
-public class Display implements TextPharse.CallBack{
+
+public class Display implements TextPharse.CallBack,TextLayer.CallBack{
 
 	//	各レイヤー
 	Layer[] mLayer;
@@ -92,10 +93,10 @@ public class Display implements TextPharse.CallBack{
 		
 		//	各レイヤーを割り振ります
 		//	レイヤー継承済みクラスで初期化してください
-		mLayer = new Layer[4];
+		mLayer = new Layer[5];
 		
 		//	テキストレイヤーで初期化
-		mLayer[0] = new TextLayer();
+		mLayer[0] = new TextLayer(this);
 		
 		//	背景レイヤーで初期化
 		mLayer[1] = new BGLayer();
@@ -105,6 +106,9 @@ public class Display implements TextPharse.CallBack{
 		
 		//	選択肢レイヤを作成
 		mLayer[3] = new OptionLayer();
+		
+		
+		mLayer[4] = new PersonLayer();
 		
 		//	テキスト解析クラスを初期化します
 		try {
@@ -162,8 +166,10 @@ public class Display implements TextPharse.CallBack{
 
 			//	人物レイヤ表示
 			if(getPersonLayer().display > 0) getPersonLayer().draw(c);
+			
 			//	テキストレイヤ表示
 			if(getTextLayer().display > 0) getTextLayer().draw(c);
+			
 			//	選択肢レイヤ表示
 			if(getOptionLayer().display > 0) getOptionLayer().draw(c);
 
@@ -339,14 +345,6 @@ public class Display implements TextPharse.CallBack{
 		bScreenUpdate = true;
 	}
 	
-	/* 現在の記録すべきデータを取得します */
-	public RecordData getData(){
-		RecordData data = new RecordData();
-		data.iLineNum = mPharse.iLineNum;
-		
-		return data;
-	}
-	
 	
 	/****************************************************************
 	 * TextPharseから受け取ったコールバックメソッドの実装
@@ -425,6 +423,17 @@ public class Display implements TextPharse.CallBack{
 		
 	}
 	
+	@Override
+	public void enablePersonImg(ArrayList<String> str) {
+		//	人物レイヤーに画像をセットします
+		//	中央限定です。
+		getPersonLayer().display = 1;
+		getPersonLayer().setBitmap(getBitmap(str.get(2)));
+
+	}
+	
+	
+	
 	/*******************************************
 	 * テキストレイヤーが1行表示しきった時の処理
 	 * @see TextLayer
@@ -434,6 +443,8 @@ public class Display implements TextPharse.CallBack{
 		//	オートモードなら勝手にすすめる
 		if(bAutoMode) nextText();
 	}
+
+
 
 
 	

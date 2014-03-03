@@ -37,13 +37,12 @@ public class TextPharse {
 		public void changeBGM(String fileName);			//	BGMの変更
 		public void changeText(String str);				//	テキストレイヤーに表示するテキストの変更
 		public void showOption(ArrayList<String> str);	//	選択肢を開く
+		public void enablePersonImg(ArrayList<String> str);	//	人物レイヤに表示
 	}
 	
-	int iLineNum;	//現在の行番号
 	ArrayList<String> mLine;	//データ
 	CallBack mCallBack;	//	コールバック
 
-	Variable mVal;			//	変数
 	
 	int iLogPtr;	//ログの位置	
 	
@@ -53,13 +52,12 @@ public class TextPharse {
 	 * デバッグ用です。下のテキストデータ用のストリームで初期化してください。
 	 ***************************************************************/
 	public TextPharse(){
-		iLineNum = 0;
+		Variable.iLineNum = 0;
 		mLine = new ArrayList<String>();		
 
 		mLine.add("テキストデータがありません");
 		mLine.add("エラーを確認しました");
 		
-		mVal = new Variable();
 	}		
 	
 	/*************************************************************
@@ -71,10 +69,9 @@ public class TextPharse {
 	 * @param cb イベント処理時のコールバック関数
 	 ***************************************************************/
 	public TextPharse(InputStream is,CallBack cb){
-		iLineNum = 0;
+		Variable.iLineNum = 0;
 		mLine = new ArrayList<String>();
 		mCallBack = cb;
-		mVal = new Variable();
 		changeFile(is);
 		
 	}
@@ -123,9 +120,9 @@ public class TextPharse {
 		ArrayList<String> strs = null;	//	コマンド解析用
 	
 		while(loop){
-			if(isEmptyLow()) iLineNum++;	//	空行無視
-			else if(isComment()) iLineNum++;		//	コメント文無視
-			else if(isLabel()) iLineNum++;			//	ラベル無視
+			if(isEmptyLow()) Variable.iLineNum++;	//	空行無視
+			else if(isComment()) Variable.iLineNum++;		//	コメント文無視
+			else if(isLabel()) Variable.iLineNum++;			//	ラベル無視
 			else if((strs=pharseCommand())!=null){	//	各コマンドの処理
 				if(strs.get(0).equals("setwindow")) setTextWindow(strs);
 				else if(strs.get(0).equals("bg")){	//	背景
@@ -140,12 +137,14 @@ public class TextPharse {
 					setValue(strs);						//	変数のセット
 				}else if(strs.get(0).equals("add")){	//	変数に値を追加する
 					addValue(strs);
+				}else if(strs.get(0).equals("ld")){	//	人物レイヤーにセット
+					mCallBack.enablePersonImg(strs);
 				}
-				iLineNum++;
+				Variable.iLineNum++;
 			}else{		//	本文の処理
 				//	改行待ち機能は今のところ実装していません
-				mCallBack.changeText(replaceVariable(mLine.get(iLineNum)));	//	変数は値を代入して読み込む
-				iLineNum++;
+				mCallBack.changeText(replaceVariable(mLine.get(Variable.iLineNum)));	//	変数は値を代入して読み込む
+				Variable.iLineNum++;
 				
 				loop = false;
 			}	//	else end
@@ -158,7 +157,7 @@ public class TextPharse {
 	 * 背景の切り替え処理が終わった際に利用します。
 	 ******************************************/
 	public void nextForce(){
-		iLineNum++;
+		Variable.iLineNum++;
 	}
 	
 	/***********************************************************
@@ -172,7 +171,7 @@ public class TextPharse {
 		int start = 0;	//	iLineNumに変更すれば現在の番号から開始します
 		for(int i=start; i<mLine.size(); i++){
 			if(mLine.get(i).equals(labelName)){
-				iLineNum = i;
+				Variable.iLineNum = i;
 				return;
 			}
 		}
@@ -183,9 +182,9 @@ public class TextPharse {
 	 * 各コマンド判定を行います
 	 * NScripterに準拠しています
 	 ******************************************************************/
-	private boolean isComment(){ if(mLine.get(iLineNum).charAt(0)==';') return true; return false;}
-	private boolean isEmptyLow(){ if(mLine.get(iLineNum).equals("")) return true; return false;}	
-	private boolean isLabel(){if(mLine.get(iLineNum).charAt(0)=='*') return true; return false;}
+	private boolean isComment(){ if(mLine.get(Variable.iLineNum).charAt(0)==';') return true; return false;}
+	private boolean isEmptyLow(){ if(mLine.get(Variable.iLineNum).equals("")) return true; return false;}	
+	private boolean isLabel(){if(mLine.get(Variable.iLineNum).charAt(0)=='*') return true; return false;}
 	
 	
 	/*********************************************************************
@@ -196,7 +195,7 @@ public class TextPharse {
 	private ArrayList<String> pharseCommand(){
 		try{
 			//	現在の行
-			String cur = mLine.get(iLineNum);
+			String cur = mLine.get(Variable.iLineNum);
 			//	空白の位置
 			int ptr = cur.indexOf(' ');
 			//	空白までがコマンド名
@@ -243,10 +242,10 @@ public class TextPharse {
 	private void setValue(ArrayList<String> strs){
 		if(strs.get(1).charAt(0)=='%'){
 			int num = Integer.parseInt(strs.get(2));
-			mVal.setValue(strs.get(1),  num);
+			Variable.setValue(strs.get(1),  num);
 		
 		}else
-			mVal.setValue(strs.get(1), strs.get(2) );	
+			Variable.setValue(strs.get(1), strs.get(2) );	
 	}
 	
 	/**********************************************************************
@@ -254,9 +253,9 @@ public class TextPharse {
 	 **********************************************************************/
 	private void addValue(ArrayList<String> strs){
 		if(strs.get(1).charAt(0)=='%')
-			mVal.addValue(strs.get(1), Integer.parseInt(strs.get(2)) );
+			Variable.addValue(strs.get(1), Integer.parseInt(strs.get(2)) );
 		else
-			mVal.addValue(strs.get(1), strs.get(2) );	
+			Variable.addValue(strs.get(1), strs.get(2) );	
 	}
 	
 	
@@ -278,7 +277,7 @@ public class TextPharse {
 			//	マッチした文字列（例：%0）を取得
 			String xxx = m.group();
 			//	値を取り出す
-			String s = mVal.getValue(xxx);
+			String s = Variable.getValue(xxx);
 			//	置き換える
 			buffer = buffer.replaceFirst(xxx, s);
 		}
@@ -297,7 +296,7 @@ public class TextPharse {
 	public ArrayList<String> getLog(){
 		ArrayList<String> buffer = new ArrayList<String>();
 		//	とりあえずそのまま現在のテキストまで返します
-		for(int i=0; i<iLineNum; i++){
+		for(int i=0; i<Variable.iLineNum; i++){
 			buffer.add(mLine.get(i));
 		}
 		return buffer;

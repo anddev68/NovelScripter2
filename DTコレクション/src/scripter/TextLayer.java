@@ -7,52 +7,71 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 /****************************************************************
- * テキストが表示されるテキストレイヤー
+ * テキストが表示されるテキストレイヤーです。
+ * 位置は今のところ画面比率に対しての固定となっています。
+ * テキストのフォント・サイズ・色はConfigから設定可能です。
  * 
- * 位置はいまのところ固定
- * テキストのフォント、サイズ、色のみConfigにもたせてます
+ * テキストがすべて読み終わるとコールバックを呼びます。
+ * 
  ****************************************************************/
 public class TextLayer extends Layer{
-	
+
+	public interface CallBack{
+		/*****************************************
+		 * テキストが終わった時、行う動作を記述します。
+		 * 通常はオートモード等に使用してください。
+		 ******************************************/
+		public void onFinish();
+	}
+
 	//	背景画像
 	Bitmap bitmap;
-	
+
 	//	表示するテキスト
 	String text;
 
 	//	テキストを滑らかに進める処理
 	int text_ptr;		//	表示している文字数
 	Timer text_timer;	//	テキストのタイマーです
-	
-	public TextLayer(){
+
+	CallBack mCallBack;
+
+	public TextLayer(CallBack cb){
 		super();
 		setText("テキストレイヤーに文字が渡されていません");
+		mCallBack = cb;
 	}
-	
+
 	public TextLayer(String txt){
 		super();
 		setText(txt);
 	}
-	
-	
+
+	public TextLayer(String txt,CallBack cb){
+		super();
+		mCallBack = cb;
+		setText(txt);
+	}
+
+
 	@Override
 	public void draw(Canvas c){
 		int width = c.getWidth();
 		int height = c.getHeight();
-		
+
 		//	テキスト枠の位置・大きさを指定します
 		int frame_top = (int)(height * 0.6);
 		int frame_left = (int)(width * 0.05);
 		int frame_width = (int)(width * 0.9);
 		int frame_height = (int)(height * 0.35);
-		
+
 		//	テキストの位置
 		int txt_top = (int)(height * 0.72);
 		int txt_left = (int)(width * 0.1);
-		
+
 		//	テキストの行間隔
 		int txt_margin = 35;
-		
+
 		//	枠の大きさを変更し、描画する
 		//	分岐は高速化のための処理
 		if(bitmap!=null){
@@ -60,10 +79,10 @@ public class TextLayer extends Layer{
 				bitmap = Bitmap.createScaledBitmap(bitmap, frame_width, frame_height, true);
 			c.drawBitmap(bitmap, frame_left, frame_top,Config.textLayerFrame());
 		}
-		
+
 		int low,start,end,left,top;
 		low = text_ptr / Config.TEXT_LAYER_MAX_LEN;	//	現在の行を取得
-		
+
 		//	恐らくテキスト送りとdraw()の同期処理ができていないのが原因かと思われる
 		//	IndexOutエラーが起きるため、エラー時は出力をしない
 		try{
@@ -76,7 +95,7 @@ public class TextLayer extends Layer{
 				String str = text.substring(start,end);
 				c.drawText(str,left,top,Config.textLayerFont());
 			}
-		
+
 			//	円滑処理中の行の表示
 			start = low * Config.TEXT_LAYER_MAX_LEN;	//	開始位置を決定
 			end = start + (text_ptr % Config.TEXT_LAYER_MAX_LEN);	//	終了位置を求める
@@ -84,14 +103,14 @@ public class TextLayer extends Layer{
 			top = txt_top + txt_margin * low;
 			String str = text.substring(start,end);
 			c.drawText(str,left,top,Config.textLayerFont());
-			
+
 		}catch(Exception e){
-			
+
 		}
 	}
-	
-	
-	
+
+
+
 	//	テキスト円滑化タイマーの初期化
 	private void initTextTimer(){
 		text_timer = new Timer();
@@ -102,7 +121,7 @@ public class TextLayer extends Layer{
 			}
 		}, 0, Config.TEXT_LAYER_SPEED);
 	}
-	
+
 	//	テキストを1文字進める
 	private void nextText(){
 		String str = text;
@@ -111,8 +130,9 @@ public class TextLayer extends Layer{
 			text_ptr++;
 		}else{
 			text_timer.cancel();
+			if(mCallBack!=null) mCallBack.onFinish();
 		}
-		
+
 	}
 
 	//	テキストを置き換える
@@ -121,9 +141,9 @@ public class TextLayer extends Layer{
 		text = str;
 		initTextTimer();
 	}
-	
+
 	public void setBitmap(Bitmap b){
 		bitmap = b;
 	}
-	
+
 }

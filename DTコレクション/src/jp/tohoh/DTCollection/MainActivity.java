@@ -1,10 +1,12 @@
 package jp.tohoh.DTCollection;
 
-import scripter.RecordData;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+
 
 public class MainActivity extends Activity {
 
@@ -22,24 +24,48 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		Intent intent = new Intent(this,PrefActivity.class);
-		startActivity(intent);
 		
-		//	getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 	
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data){
-		if(requestCode == REQ_LOAD){
-			//	resultCodeはファイル番号
-		}else if(requestCode == REQ_SAVE){
-			RecordData r = mv.getData();
-		
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		switch(item.getItemId()){
+		case R.id.action_settings:
+			Intent intent = new Intent(this,PrefActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.item1:
+			
+			break;
+		case R.id.item2:
+			break;
 		}
 		
+		return super.onMenuItemSelected(featureId, item);
+	}
+
+	
+	
+	//	設定画面を開く
+	public void onSetting(MenuItem item){
+		Toast.makeText(this, "テスト", Toast.LENGTH_LONG).show();
+		Intent intent = new Intent(this,PrefActivity.class);
+		startActivity(intent);
+	}
+	
+	//	セーブ画面を開く
+	public void onSave(MenuItem item){
+		Toast.makeText(this, "テスト", Toast.LENGTH_LONG).show();
+	}
+	
+	//	ロード画面を開く
+	public void onLoad(MenuItem item){
+		Toast.makeText(this, "テスト", Toast.LENGTH_LONG).show();
 		
 	}
+	
+
 
 }

@@ -4,6 +4,8 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_settings" android:onClick="openSetting"/>
+        android:title="Setting"/>
+    <item android:id="@+id/item1" android:title="Save"></item>
+    <item android:id="@+id/item2" android:title="Load"></item>
 
 </menu>

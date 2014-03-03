@@ -15,6 +15,7 @@ import android.graphics.Paint;
  */
 public class Config {
 	
+
 	/****************************************
 	 * テキストレイヤーで使用するフォントの設定
 	 ****************************************/
@@ -27,7 +28,7 @@ public class Config {
 		pTextLayerFont.setTextSize(TEXT_LAYER_FONT_SIZE);
 		return pTextLayerFont;
 	}
-	
+
 	/***********************************************
 	 * テキストレイヤーの枠を設定
 	 * 透過情報はテキストレイヤーがpngのみに限る
@@ -38,22 +39,30 @@ public class Config {
 		p.setAlpha(TEXT_LAYER_FRAME_ALPHA);
 		return p;
 	}
-	
+
 	/***************************************************
 	 * その他テキストレイヤーにおける設定
 	 ***************************************************/
 	public static final int TEXT_LAYER_MAX_LEN = 30;	//	１行の最大文字数。超えると折り返す。	
 	public static int TEXT_LAYER_SPEED = 150;			//	1文字の表示間隔[ms]。数値が少ないほうが早い。
-	
+
 	/**************************************************
 	 * バックログレイヤの設定
 	 */
 	public static final int BACKLOG_LAYER_MAX_LEN = 32;	//	バックログレイヤの最大行数
-	
-	
-	
-	
-	
+
+
+	/**************************************************:
+	 * 汎用白文字フォント
+	 **************************************************/
+	public static Paint whiteFont(){
+		Paint p = new Paint();
+		p.setColor(Color.WHITE);
+		p.setTextSize(30);
+		return p;
+	}
+
+
 	/**
 	 * デバッグ用フォント設定
 	 */
@@ -63,7 +72,7 @@ public class Config {
 		p.setTextSize(50);
 		return p;
 	}
-	
+
 	/**
 	 * 汎用青
 	 */
@@ -73,7 +82,6 @@ public class Config {
 		p.setColor(Color.rgb(0, 0, 200));
 		return p;
 	}
-	
-	
+
 
 }

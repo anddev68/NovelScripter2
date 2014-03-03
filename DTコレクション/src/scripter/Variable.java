@@ -17,11 +17,9 @@ import java.io.InputStreamReader;
  * このクラスは1個以上プログラムに存在することができないため、
  * 静的参照が行えます。
  * 
- * ファイルを使ってセーブロードする際は、RecordDataのインスタンスを渡してください。
+ * 行番号もこのクラスに静的変数として残しました。
+ * セーブ・ロードにはこのクラスに静的メソッドでアクセスしてください。
  * 
- * 
- *  
- *  
  * 
  * 【グローバル変数】
  * ・セーブしようがロードしようが変わらない
@@ -49,14 +47,13 @@ public class Variable {
 	//	メモリの状況で変更してください。
 	public static final int GLOBAL_MAX = 400;
 	
-	public static int[] mValInt = new int[GLOBAL_MAX];;
-	public static String[] mValStr = new String[GLOBAL_MAX];;
+	//	プログラムで試用する変数です
+	public static int[] mValInt = new int[GLOBAL_MAX];
+	public static String[] mValStr = new String[GLOBAL_MAX];
 	
-	public Variable(){
-		mValInt = new int[GLOBAL_MAX];
-		mValStr = new String[GLOBAL_MAX];
-		
-	}
+	//	行番号です
+	public static int iLineNum = 0;
+	
 
 	/***********************************
 	 * 変数名$xxxまたは%xxxのデータを取得します。
@@ -72,10 +69,10 @@ public class Variable {
 			//	変数番号を取得する
 			index = Integer.parseInt(name.substring(1));
 		
-			if(name.charAt(0)=='$')
+			if(name.charAt(0)=='%')
 				str = ""+mValInt[index];
 				
-			else if(name.charAt(0)=='%')
+			else if(name.charAt(0)=='$')
 				str = mValStr[index];
 				
 		}catch(Exception e){}
@@ -115,17 +112,16 @@ public class Variable {
 	}
 	
 	
-	/*************************************************
-	 * 指定されたストリーム（セーブデータ.data）を解析し、
-	 * 現在の変数、行番号などをセットし、返します。
-	 *************************************************/
-	public static RecordData read(InputStream stream){
+	/*******************************************************
+	 * 指定されたストリームから行番号と変数をセットします
+	 * 
+	 *****************************************************/
+	public void setData(InputStream stream){
 		try {
-			RecordData data = new RecordData();
 			BufferedReader br = new BufferedReader(new InputStreamReader(stream));
 			
 			//	1行目は行番号
-			data.iLineNum = Integer.parseInt(br.readLine());
+			iLineNum = Integer.parseInt(br.readLine());
 			
 			//	それ以降は変数の内容
 			String line = "";
@@ -135,24 +131,27 @@ public class Variable {
 			for(int i=0; i<200; i++){
 				line = br.readLine();
 				int x =Integer.parseInt(line);
-				data.mVar.mValInt[i] = x;
+				mValInt[i] = x;
 			}
 			
 			//	ローカル文字データを取得
 			for(int i=0; i<200; i++){
 				line = br.readLine();
-				data.mVar.mValStr[i] = line;
+				mValStr[i] = line;
 			}
 			
 			
 			br.close();
-			return data;
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
-			return null;
 		}
+		
+		
+		
+		
 	}
+	
 
 	
 	

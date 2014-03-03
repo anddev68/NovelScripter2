@@ -1,23 +1,16 @@
 実装計画表
 
+2014/03/03
+静的メソッド・変数しか持たないVariableクラスを作成しました。
+行番号と変数はプログラム内に１つしか存在しないためです。
+コレによりセーブ/ロードを簡略化できました。
+ここのmValStrとmValInt、iLineNumにアクセスすれば簡単に変更できます。
 
-LoadActivity→MainActivity→Display.loadData;
-・ボタンが押される
-・ファイル名・番号の取得
-・resultとしてMainActivityに返す
-・その値をもとにRecorderで解析を行い、displayに渡す
-
-
-SaveActivity#onSaveButton→MainActivity#onResultActivity→Recorder#write→ 
-                                        →display#getData→↑
-
-・セーブボタンが押される
-・ファイル名・番号の決定
-・resultとしてMainActivityに返す
-・その値をもとにRecorderに渡し、保存する
+メニュー画面を開くとバグります。
+おそらくActivityの中断、再開がうまくできていないからだと考えられます。
 
 
-SaveActivity#setData→Recorder#getData()→
+
 
 
 MainActivity

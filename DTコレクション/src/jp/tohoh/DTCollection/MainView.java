@@ -3,7 +3,6 @@ package jp.tohoh.DTCollection;
 
 
 
-import scripter.RecordData;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -68,13 +67,7 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 		}
 	}
 	
-	/***********************************
-	 * 読み書きするデータを取得します
-	 * @return 
-	 **********************************/
-	public RecordData getData(){
-		return display.getData();
-	}
+
 
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
@@ -96,6 +89,7 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 		loop = false;
 		thread = null;
 	}
+	
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent me){
@@ -133,6 +127,7 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 	@Override
 	public boolean onDown(MotionEvent arg0) {
 		display.clickOptionLayer((int)arg0.getX(), (int)arg0.getY());
+		display.disableAutoMode();
 		System.out.println("onDown");
 		return false;
 	}
@@ -154,6 +149,7 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 	public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2,
 			float arg3) {
 		int rangeY = (int) (arg0.getRawY() - arg1.getRawY());
+		int rangeX = (int) (arg0.getRawX() - arg1.getRawX());
 		if(rangeY > 30){
 			//	下方向にスライド
 			display.upBackLogLayer();
@@ -161,9 +157,14 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 			//	上方向にスライド
 			display.downBackLogLayer();
 		}
+		if( rangeX > 30){
+			//	右方向にスライド
+			display.enableAutoMode();
+		}
 		
 		System.out.println("onScroll");
 		return false;
+		
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
@@ -51,29 +50,9 @@ public class MainActivity extends Activity {
 	}
 
 	
-	
-	//	設定画面を開く
-	public void onSetting(MenuItem item){
-		Toast.makeText(this, "テスト", Toast.LENGTH_LONG).show();
-		Intent intent = new Intent(this,PrefActivity.class);
-		startActivity(intent);
-	}
-	
-	//	セーブ画面を開く
-	public void onSave(MenuItem item){
-		Toast.makeText(this, "テスト", Toast.LENGTH_LONG).show();
-	}
-	
-	//	ロード画面を開く
-	public void onLoad(MenuItem item){
-		Toast.makeText(this, "テスト", Toast.LENGTH_LONG).show();
-		
-	}
-	
 	@Override
 	public void onRestart(){
 		super.onRestart();
-		mv.update();
 	}
 	
 

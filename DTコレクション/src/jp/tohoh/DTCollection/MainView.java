@@ -25,8 +25,12 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 	//	前回の位置
 	float oldX1,oldY1,oldX2,oldY2;
 	
-	//	バッファ
+	//	バッファリング用バッファ
 	Bitmap buffer;
+	
+	//	再スタート用の保存画像
+	Bitmap stamp = null;
+	
 	
 	SurfaceHolder surfaceHolder;
 	boolean loop;
@@ -40,8 +44,6 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 		display = new scripter.Display(context);
 		
 		gesture = new GestureDetector(context, this);
-		
-		
 		
 	}
 
@@ -67,21 +69,27 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 		}
 	}
 	
-	public void update(){
-		display.update();
-	}
+
 
 
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-		buffer = 
-				Bitmap.createBitmap(arg2, arg3, Bitmap.Config.ARGB_8888);
+		if(stamp==null)
+			//	Activityの初回起動時は何もない画像で作成
+			buffer = Bitmap.createBitmap(arg2, arg3, Bitmap.Config.ARGB_8888);
+		else{
+			//	保存しておいた画像を元に戻す
+			buffer = stamp;
+			stamp = null;
+		}
+		
 		display.setScreenSize(arg2, arg3);
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
-	
+		
+		//	スレッドの開始
 		thread = new Thread(this);
 		thread.start();
 		loop = true;
@@ -89,8 +97,13 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
+		//	スレッドを停止する
 		loop = false;
 		thread = null;
+		
+		//	Activity再開時用に現在の画像を保存する
+		stamp = buffer;
+		
 	}
 	
 	

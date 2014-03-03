@@ -37,11 +37,12 @@ public class MainActivity extends Activity {
 			startActivity(intent);
 			break;
 		case R.id.item1:
-			intent = new Intent(this,SaveActivity.class);
+			intent = new Intent(this,SaveLoadActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.item2:
-			intent = new Intent(this,LoadActivity.class);
+			intent = new Intent(this,SaveLoadActivity.class);
+			intent.putExtra("mode", SaveLoadActivity.LOAD_MODE);
 			startActivity(intent);
 			break;
 		}

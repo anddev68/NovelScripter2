@@ -26,10 +26,10 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 	float oldX1,oldY1,oldX2,oldY2;
 	
 	//	バッファリング用バッファ
-	Bitmap buffer;
+	 Bitmap buffer;
 	
 	//	再スタート用の保存画像
-	Bitmap stamp = null;
+	 static Bitmap stamp = null;
 	
 	
 	SurfaceHolder surfaceHolder;
@@ -214,6 +214,11 @@ public class MainView extends SurfaceView implements Runnable,Callback,
 		return false;
 	
 	
+	}
+	
+	
+	public static Bitmap getScreenShot(){
+		return stamp;
 	}
 	
 	
